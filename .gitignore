@@ -1,0 +1,11 @@
+/__pycache__
+/.ipynb_checkpoints
+
+*/__pycache__
+*/.ipynb_checkpoints
+
+/datasets
+*.json
+*.xlsx
+.DS_Store
+Tunner.py
