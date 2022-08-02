@@ -1,6 +1,5 @@
 import numpy as np
 from typing import List, Union, Tuple
-import torch
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from packaging import version

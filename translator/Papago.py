@@ -1,8 +1,5 @@
-import requests as req
-import re
 import json
 import urllib.request
-import requests
 from tqdm import tqdm
 class Papago():
     def __init__(self,client_id,client_secret):

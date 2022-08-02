@@ -1,5 +1,4 @@
 from googletrans import Translator
-from Papago import Papago
 from tqdm import tqdm
 
 class GoogleTranslator():

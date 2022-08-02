@@ -1,5 +1,6 @@
 import pandas as pd
-from utils import DataUtils
+from utils.utils import DataUtils
+from translator.Papago import Papago
 from tqdm import tqdm
 import os
 client_ids=['NeJEvEYOm7UusbYNde7g','dI4S2Ce4DKqwtAuF9UFa','3dvhgNwB2eOv7Rn1EjUc','N9zG4hJ64gZVXHwSvdW4','rwIWa9m84NNmuojMrns9',
@@ -12,7 +13,8 @@ origin_path=os.path.join(path,fname)
 translated_path=os.path.join(path,'en '+fname)
 
 for client_id,client_secret in zip(client_ids,client_secrets):
-    utils=DataUtils(client_id,client_secret)
+    translator=Papago(client_id,client_secret)
+    utils=DataUtils(translator)
     if os.path.isfile(translated_path):
         df=utils.load_data(translated_path)
     else:
@@ -24,7 +26,8 @@ for client_id,client_secret in zip(client_ids,client_secrets):
 
 client_id='A4Mceclx8PV864nLzpJA'
 client_secret='gSGhYL3Roj'
-utils=DataUtils(client_id,client_secret)
+translator=Papago(client_id,client_secret)
+utils=DataUtils(translator)
 
 df=utils.load_data(translated_path)
 df2=pd.read_json('datasets/meta_list.json')

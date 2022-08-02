@@ -5,15 +5,11 @@ import urllib.request
 from tqdm import tqdm
 import json
 import time
-from SomaTranslator import SomaTranslator
-from Papago import Papago
 class DataUtils():
 
-    def __init__(self,client_id,client_secret):
+    def __init__(self,translator=None):
         
-        self.client_id=client_id
-        self.client_secret=client_secret
-        self.translator=Papago(client_id,client_secret)
+        self.translator=translator
     
     def load_data(self,path):
         '''
@@ -45,17 +41,28 @@ class DataUtils():
     def clean(self,df,filter):
         df=df[df[filter]==1]
         return df
-        
+
+    def isInitialized(self):
+        if self.translator==None:
+            print('translator is not initialized')
+            return False
+        else:
+            return True
+    
     def translate_dataframe(self,df,column,target='en'):
+        if not self.isInitialized: return None
         return self.translator.translate_dataframe(df,column,target)
     
     def translate(self,text,target='en'):
+        if not self.isInitialized: return None
         return self.translator.translate(text,target)
     
     def translate_word(self,text,source='en',target='ko'):
+        if not self.isInitialized: return None
         return self.translator.translate_word(text,source,target)
     
     def is_translated(self,df,column,target='en'):
+        if not self.isInitialized: return None
         for ele in df[column]:
             source=self.translator.get_language_type(ele)
             if source != target: return False
