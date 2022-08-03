@@ -1,10 +1,6 @@
 import pandas as pd
-import os
-import sys
-import urllib.request
+from konlpy.tag import Kkma
 from tqdm import tqdm
-import json
-import time
 class DataUtils():
 
     def __init__(self,translator=None):
@@ -41,7 +37,43 @@ class DataUtils():
     def clean(self,df,filter):
         df=df[df[filter]==1]
         return df
-
+    
+    def removeMorph(self,text,excluded_morph):
+        if isinstance(excluded_morph,str):
+            tag=[tag]
+        if isinstance(text,str):
+            text=[text]
+        ret=[]
+        kkma=Kkma()
+        for t in text:
+            result=''
+            morphs=kkma.pos(t)
+            for word,morph in morphs:
+                if morph in excluded_morph: continue
+                result+=' '+word
+            result=result.lstrip()
+            if len(result)==0: continue
+            ret.append(result)
+        return ret
+    
+    def extractMorph(self,text,included_morph):
+        if isinstance(included_morph,str):
+            tag=[tag]
+        if isinstance(text,str):
+            text=[text]
+        ret=[]
+        kkma=Kkma()
+        for t in text:
+            result=''
+            morphs=kkma.pos(t)
+            for word,morph in morphs:
+                if morph not in included_morph: continue
+                result+=' '+word
+            result=result.lstrip()
+            if len(result)==0: continue
+            ret.append(result)
+        return ret
+    
     def isInitialized(self):
         if self.translator==None:
             print('translator is not initialized')

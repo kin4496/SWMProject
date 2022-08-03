@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 from typing import List, Union, Tuple
 from sklearn.metrics.pairwise import cosine_similarity
@@ -5,8 +6,16 @@ from sklearn.feature_extraction.text import CountVectorizer
 from packaging import version
 from sklearn import __version__ as sklearn_version
 class TagBert:
-    def __init__(self,model,tokenizer,encode,embed):
-        self.model=model
+    def __init__(self,model,tokenizer,encode,embed,device='cpu'):
+        if device=='gpu' and torch.cuda.is_available():
+            print('Use gpu cuda')
+            self.device=torch.device('cuda')
+        elif device=='gpu' and torch.backends.mps.is_available():
+            print('Use gpu mps')
+            self.device=torch.device('mps')
+        else:
+            self.device=torch.device('cpu')
+        self.model=model.to(self.device)
         self.tokenizer=tokenizer
         self.encode=encode
         self.embed=embed
@@ -55,11 +64,11 @@ class TagBert:
         encoded_words=self.encode(self.tokenizer,words)
         encoded_docs=self.encode(self.tokenizer,docs)
 
-        doc_embeddings = self.embed(self.model,encoded_docs)
-        word_embeddings = self.embed(self.model,encoded_words)
+        doc_embeddings = self.embed(self.model,encoded_docs,self.device)
+        word_embeddings = self.embed(self.model,encoded_words,self.device)
 
-        doc_embeddings=np.array([ele.detach().numpy() for ele in doc_embeddings])
-        word_embeddings=np.array([ele.detach().numpy() for ele in word_embeddings])
+        doc_embeddings=np.array([ele.detach().cpu().numpy() for ele in doc_embeddings])
+        word_embeddings=np.array([ele.detach().cpu().numpy() for ele in word_embeddings])
 
         all_tags=[]
 
