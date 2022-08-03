@@ -9,3 +9,4 @@
 *.xlsx
 .DS_Store
 Tunner.py
+.ignore
